@@ -18,7 +18,7 @@ static NSString *RI_DISMISSAL_ACTION_KEY = @"com.random-ideas.DISMISSAL_ACTION";
 {
     if((self = [self initWithTitle:inTitle delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil]))
     {
-        NSMutableArray *buttonsArray = [NSMutableArray array];
+        NSMutableArray * buttonsArray = [NSMutableArray array];
         
         RIButtonItem *eachItem;
         va_list argumentList;
@@ -56,6 +56,37 @@ static NSString *RI_DISMISSAL_ACTION_KEY = @"com.random-ideas.DISMISSAL_ACTION";
     }
     return self;
 }
+-(id)initWithTitle:(NSString *)inTitle cancelButtonItem:(RIButtonItem *)inCancelButtonItem destructiveButtonItem:(RIButtonItem *)inDestructiveItem otherButtonArray:(NSArray*)inOtherButtonArray
+{
+    if((self = [self initWithTitle:inTitle delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil]))
+    {
+        
+        NSMutableArray *buttonsArray = [inOtherButtonArray mutableCopy];
+        
+        for(RIButtonItem *item in inOtherButtonArray)
+        {
+            [self addButtonWithTitle:item.label];
+        }
+        
+        if(inDestructiveItem)
+        {
+            [buttonsArray addObject:inDestructiveItem];
+            NSInteger destIndex = [self addButtonWithTitle:inDestructiveItem.label];
+            [self setDestructiveButtonIndex:destIndex];
+        }
+        if(inCancelButtonItem)
+        {
+            [buttonsArray addObject:inCancelButtonItem];
+            NSInteger cancelIndex = [self addButtonWithTitle:inCancelButtonItem.label];
+            [self setCancelButtonIndex:cancelIndex];
+        }
+        
+        objc_setAssociatedObject(self, (__bridge const void *)RI_BUTTON_ASS_KEY, buttonsArray, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        
+    }
+    return self;
+    
+}
 
 - (NSInteger)addButtonItem:(RIButtonItem *)item
 {	
@@ -65,6 +96,10 @@ static NSString *RI_DISMISSAL_ACTION_KEY = @"com.random-ideas.DISMISSAL_ACTION";
 	[buttonsArray addObject:item];
 	
 	return buttonIndex;
+}
+- (NSInteger)addButtonWithLabel:(NSString *)inLabel andAction:(void (^)())inAction
+{
+    return [self addButtonItem:[RIButtonItem itemWithLabel:inLabel andAction:inAction]];
 }
 
 - (void)setDismissalAction:(void(^)())dismissalAction

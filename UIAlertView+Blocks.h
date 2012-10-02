@@ -12,7 +12,11 @@
 @interface UIAlertView (Blocks)
 
 -(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonItem:(RIButtonItem *)inCancelButtonItem otherButtonItems:(RIButtonItem *)inOtherButtonItems, ... NS_REQUIRES_NIL_TERMINATION;
+-(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonItem:(RIButtonItem *)inCancelButtonItem otherButtonArray:(NSArray *)inOtherButtonArray;
+-(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonTitle:(NSString*)inCancelButtonLabel cancelButtonAction:(void (^)())inCancelAction otherButtonArray:(NSArray *)inOtherButtonArray;
+-(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonTitle:(NSString*)inCancelButtonLabel cancelButtonAction:(void (^)())inCancelAction;
 
 - (NSInteger)addButtonItem:(RIButtonItem *)item;
+- (NSInteger)addButtonWithLabel:(NSString *)inLabel andAction:(void (^)())inAction;
 
 @end

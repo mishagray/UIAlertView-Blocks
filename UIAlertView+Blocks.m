@@ -13,24 +13,35 @@ static NSString *RI_BUTTON_ASS_KEY = @"com.random-ideas.BUTTONS";
 
 @implementation UIAlertView (Blocks)
 
--(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonItem:(RIButtonItem *)inCancelButtonItem otherButtonItems:(RIButtonItem *)inOtherButtonItems, ... 
+-(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonItem:(RIButtonItem *)inCancelButtonItem otherButtonItems:(RIButtonItem *)inOtherButtonItems, ...
+{
+    NSMutableArray *buttonsArray = [NSMutableArray array];
+    
+    RIButtonItem *eachItem;
+    va_list argumentList;
+    if (inOtherButtonItems)
+    {
+        [buttonsArray addObject: inOtherButtonItems];
+        va_start(argumentList, inOtherButtonItems);
+        while((eachItem = va_arg(argumentList, RIButtonItem *)))
+        {
+            [buttonsArray addObject: eachItem];
+        }
+        va_end(argumentList);
+    }
+
+    return [self initWithTitle:inTitle message:inMessage cancelButtonItem:inCancelButtonItem otherButtonArray:buttonsArray];
+}
+
+-(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonItem:(RIButtonItem *)inCancelButtonItem otherButtonArray:(NSArray *)inOtherButtonArray
 {
     if((self = [self initWithTitle:inTitle message:inMessage delegate:self cancelButtonTitle:inCancelButtonItem.label otherButtonTitles:nil]))
     {
-        NSMutableArray *buttonsArray = [NSMutableArray array];
-        
-        RIButtonItem *eachItem;
-        va_list argumentList;
-        if (inOtherButtonItems)                     
-        {                                  
-            [buttonsArray addObject: inOtherButtonItems];
-            va_start(argumentList, inOtherButtonItems);       
-            while((eachItem = va_arg(argumentList, RIButtonItem *))) 
-            {
-                [buttonsArray addObject: eachItem];            
-            }
-            va_end(argumentList);
-        }    
+        NSMutableArray *buttonsArray;
+        if (inOtherButtonArray == nil)
+            buttonsArray = [NSMutableArray arrayWithCapacity:2];
+        else
+            buttonsArray = [inOtherButtonArray mutableCopy];
         
         for(RIButtonItem *item in buttonsArray)
         {
@@ -45,6 +56,23 @@ static NSString *RI_BUTTON_ASS_KEY = @"com.random-ideas.BUTTONS";
         [self setDelegate:self];
     }
     return self;
+    
+}
+
+-(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonTitle:(NSString*)inCancelButtonLabel cancelButtonAction:(void (^)())inCancelAction otherButtonArray:(NSArray *)inOtherButtonArray
+{
+    return [self initWithTitle:inTitle
+                       message:inMessage
+              cancelButtonItem:[RIButtonItem itemWithLabel:inCancelButtonLabel andAction:inCancelAction]
+              otherButtonArray:inOtherButtonArray];
+}
+
+-(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonTitle:(NSString*)inCancelButtonLabel cancelButtonAction:(void (^)())inCancelAction
+{
+    return [self initWithTitle:inTitle
+                       message:inMessage
+              cancelButtonItem:[RIButtonItem itemWithLabel:inCancelButtonLabel andAction:inCancelAction]
+              otherButtonArray:nil];
 }
 
 - (NSInteger)addButtonItem:(RIButtonItem *)item
@@ -55,6 +83,11 @@ static NSString *RI_BUTTON_ASS_KEY = @"com.random-ideas.BUTTONS";
 	[buttonsArray addObject:item];
 	
 	return buttonIndex;
+}
+
+- (NSInteger)addButtonWithLabel:(NSString *)inLabel andAction:(void (^)())inAction
+{
+    return [self addButtonItem:[RIButtonItem itemWithLabel:inLabel andAction:inAction]];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
