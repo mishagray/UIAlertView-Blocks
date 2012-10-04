@@ -13,6 +13,34 @@ static NSString *RI_BUTTON_ASS_KEY = @"com.random-ideas.BUTTONS";
 
 @implementation UIAlertView (Blocks)
 
+
++(id)showAlertWithTitle:(NSString *)title
+                 message:(NSString *)message
+       cancelButtonTitle:(NSString*)cancelButtonLabel
+      cancelButtonAction:(void (^)())cancelAction
+        otherButtonArray:(NSArray *)otherButtonArray
+{
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:title message:message cancelButtonTitle:cancelButtonLabel cancelButtonAction:cancelAction otherButtonArray:otherButtonArray];
+    [alert show];
+    return alert;
+}
+
+
++(id)showAlertWithTitle:(NSString *)title
+                message:(NSString *)message
+      cancelButtonTitle:(NSString*)cancelButtonLabel
+     cancelButtonAction:(void (^)())cancelAction
+          okButtonTitle:(NSString*)okButtonLabel
+         okButtonAction:(void (^)())okAction
+{
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle:title message:message cancelButtonTitle:cancelButtonLabel cancelButtonAction:cancelAction];
+    if ([okButtonLabel length] > 0)
+        [alert addButtonWithLabel:okButtonLabel andAction:okAction];
+    [alert show];
+    return alert;
+}
+
+
 -(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonItem:(RIButtonItem *)inCancelButtonItem otherButtonItems:(RIButtonItem *)inOtherButtonItems, ...
 {
     NSMutableArray *buttonsArray = [NSMutableArray array];

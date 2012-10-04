@@ -16,6 +16,22 @@
 -(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonTitle:(NSString*)inCancelButtonLabel cancelButtonAction:(void (^)())inCancelAction otherButtonArray:(NSArray *)inOtherButtonArray;
 -(id)initWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonTitle:(NSString*)inCancelButtonLabel cancelButtonAction:(void (^)())inCancelAction;
 
+
++(id)showAlertWithTitle:(NSString *)title
+                message:(NSString *)message
+      cancelButtonTitle:(NSString*)cancelButtonLabel
+     cancelButtonAction:(void (^)())cancelAction
+       otherButtonArray:(NSArray *)otherButtonArray;
+
+
++(id)showAlertWithTitle:(NSString *)title
+                message:(NSString *)message
+      cancelButtonTitle:(NSString*)cancelButtonLabel
+     cancelButtonAction:(void (^)())cancelAction
+      okButtonTitle:(NSString*)okButtonLabel
+         okButtonAction:(void (^)())okAction;
+
+
 - (NSInteger)addButtonItem:(RIButtonItem *)item;
 - (NSInteger)addButtonWithLabel:(NSString *)inLabel andAction:(void (^)())inAction;
 
