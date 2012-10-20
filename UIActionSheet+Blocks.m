@@ -60,8 +60,11 @@ static NSString *RI_DISMISSAL_ACTION_KEY = @"com.random-ideas.DISMISSAL_ACTION";
 {
     if((self = [self initWithTitle:inTitle delegate:self cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil]))
     {
-        
-        NSMutableArray *buttonsArray = [inOtherButtonArray mutableCopy];
+        NSMutableArray *buttonsArray = nil;
+        if (inOtherButtonArray != nil)
+            buttonsArray = [inOtherButtonArray mutableCopy];
+        else
+            buttonsArray = [NSMutableArray arrayWithCapacity:3];
         
         for(RIButtonItem *item in inOtherButtonArray)
         {
